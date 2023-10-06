@@ -23,10 +23,10 @@ vim.keymap.set("n", "<C-home>", "<cmd>vertical resize -2<cr>", { desc = "Decreas
 vim.keymap.set("n", "<C-end>", "<cmd>vertical resize +2<cr>", { desc = "Increase window width" })
 
 -- Undo history
-vim.keymap.set("n", "<S-u>", vim.cmd.UndotreeToggle, { desc = "Undotree" })
+vim.keymap.set("n", "<M-u>", vim.cmd.UndotreeToggle, { desc = "Undotree" })
 
 -- Paste and preserve original copy
-vim.keymap.set("x", "<S-p>", [["_dP]], { desc = "Paste (preserve copy)" })
+vim.keymap.set("x", "<M-p>", [["_dP]], { desc = "Paste (preserve copy)" })
 
 -- Markdown preview
 vim.keymap.set("n", "<M-m>", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Markdown preview" })
