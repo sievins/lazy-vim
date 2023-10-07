@@ -3,8 +3,10 @@ return {
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {
-        section_separators = "",
-        component_separators = "",
+        theme = "solarized_dark",
+
+        -- section_separators = "",
+        -- component_separators = "",
       },
     },
   },

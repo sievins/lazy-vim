@@ -25,8 +25,10 @@ vim.keymap.set("n", "<C-end>", "<cmd>vertical resize +2<cr>", { desc = "Increase
 -- Undo history
 vim.keymap.set("n", "<M-u>", vim.cmd.UndotreeToggle, { desc = "Undotree" })
 
--- Paste and preserve original copy
+-- Paste/Delete and preserve original copy
 vim.keymap.set("x", "<M-p>", [["_dP]], { desc = "Paste (preserve copy)" })
+vim.keymap.set("n", "<M-d>", [["_dd]], { desc = "Delete (black hole register)" })
+vim.keymap.set("x", "<M-d>", [["_d]], { desc = "Delete (black hole register)" })
 
 -- Markdown preview
 vim.keymap.set("n", "<M-m>", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Markdown preview" })
