@@ -2,9 +2,13 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- Open new line (like o/O) without moving the cursor, without entering insert mode and removing any characters
+vim.keymap.set("n", "<CR>", "mao<esc>0<S-d>`a<cmd>delmarks a<cr>", { desc = "Add new line below" })
+vim.keymap.set("n", "<S-CR>", "maO<esc>0<S-d>`a<cmd>delmarks a<cr>", { desc = "Add new line above" })
+
 -- Move lines (managed by <M-j/k>)
--- vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
--- vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set("v", "<M-down>", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "<M-up>", ":m '<-2<CR>gv=gv")
 
 -- Move to window using the <ctrl> arrow keys
 vim.keymap.set("n", "<C-left>", "<C-w>h", { desc = "Go to left window", remap = true })
@@ -34,8 +38,8 @@ vim.keymap.set("x", "<M-d>", [["_d]], { desc = "Delete (black hole register)" })
 vim.keymap.set("n", "<M-m>", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Markdown preview" })
 
 -- Copy filename / path
-vim.keymap.set("n", "<leader>fpf", '<cmd>let @+ = expand("%:t")<cr>', { desc = "Copy filename" })
-vim.keymap.set("n", "<leader>fpp", '<cmd>let @+ = expand("%")<cr>', { desc = "Copy path" })
+vim.keymap.set("n", "<leader>bcf", '<cmd>let @+ = expand("%:t")<cr>', { desc = "Copy filename" })
+vim.keymap.set("n", "<leader>bcp", '<cmd>let @+ = expand("%")<cr>', { desc = "Copy path" })
 
 -- Buffer
 vim.keymap.set("n", "<S-left>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Prev buffer" })
