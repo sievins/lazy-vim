@@ -2,9 +2,19 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
--- Open new line (like o/O) without moving the cursor, without entering insert mode and removing any characters
-vim.keymap.set("n", "<CR>", "mao<esc>0<S-d>`a<cmd>delmarks a<cr>", { desc = "Add new line below" })
-vim.keymap.set("n", "<S-CR>", "maO<esc>0<S-d>`a<cmd>delmarks a<cr>", { desc = "Add new line above" })
+-- Set keymap for normal windows only (e.g. not quickfix)
+local normal_window_keymap = function(mode, lhs, rhs, opts)
+  local merged_opts = vim.tbl_extend("force", { noremap = true, expr = true }, opts or {})
+
+  vim.keymap.set(mode, lhs, function()
+    local buftype = vim.fn.win_gettype()
+    return buftype == "" and rhs or lhs
+  end, merged_opts)
+end
+
+-- Add new line (like o/O) without moving the cursor, without entering insert mode and removing any characters
+normal_window_keymap("n", "<CR>", "mao<esc>0<S-d>`a<cmd>delmarks a<cr>", { desc = "Add new line below" })
+normal_window_keymap("n", "<S-CR>", "maO<esc>0<S-d>`a<cmd>delmarks a<cr>", { desc = "Add new line above" })
 
 -- Move lines (managed by <M-j/k>)
 vim.keymap.set("v", "<M-down>", ":m '>+1<CR>gv=gv")
