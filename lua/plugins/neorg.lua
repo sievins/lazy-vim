@@ -13,7 +13,7 @@ return {
               workspaces = {
                 notes = "~/OneDrive - Adarga/neorg/notes",
                 specs = "~/OneDrive - Adarga/neorg/specs",
-                scratches = "~/OneDrive - Adarga/neorg/scratches",
+                elders = "~/OneDrive - Adarga/neorg/elders",
               },
             },
           },
