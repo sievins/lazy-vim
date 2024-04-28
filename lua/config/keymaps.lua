@@ -64,6 +64,22 @@ vim.keymap.set("n", "]b", "<cmd>BufferLineMoveNext<cr>", { desc = "Move buffer r
 
 vim.keymap.set("n", "<M-w>", "<cmd>bdelete<cr>", { desc = "Delete buffer and window" })
 
+local split_window_right = function()
+  local original_buffer = vim.fn.bufnr()
+  vim.cmd.BufferLineCyclePrev()
+  vim.cmd("vert sb " .. original_buffer)
+end
+
+local split_window_below = function()
+  local original_buffer = vim.fn.bufnr()
+  vim.cmd.BufferLineCyclePrev()
+  vim.cmd("sb " .. original_buffer)
+end
+
+vim.keymap.set("n", "<leader>|", split_window_right, { desc = "Prev Window Right" })
+
+vim.keymap.set("n", "<leader>-", split_window_below, { desc = "Prev Window Below" })
+
 vim.keymap.set(
   "n",
   "<leader>1",
