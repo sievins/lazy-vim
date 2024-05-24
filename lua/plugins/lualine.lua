@@ -5,8 +5,9 @@ return {
       options = {
         theme = "solarized_dark",
 
-        -- section_separators = "",
-        -- component_separators = "",
+        -- For transparent background
+        section_separators = "",
+        component_separators = "",
       },
     },
   },
