@@ -14,5 +14,8 @@ return {
       transparent.clear_prefix("NeoTree")
       transparent.clear_prefix("lualine")
     end,
+    keys = {
+      { "<leader>t", "<cmd>TransparentToggle<CR>", desc = "Toggle Transparency" },
+    },
   },
 }
