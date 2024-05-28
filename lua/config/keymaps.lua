@@ -52,6 +52,9 @@ vim.keymap.set("x", "<M-d>", [["_d]], { desc = "Delete (black hole register)" })
 -- Markdown preview
 vim.keymap.set("n", "<M-m>", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Markdown preview" })
 
+-- Open URL
+vim.keymap.set("n", "<M-o>", "<cmd>URLOpenUnderCursor<cr>", { desc = "Open URL" })
+
 -- Copy filename / path
 vim.keymap.set("n", "<leader>bcf", '<cmd>let @+ = expand("%:t")<cr>', { desc = "Copy filename" })
 vim.keymap.set("n", "<leader>bcp", '<cmd>let @+ = expand("%")<cr>', { desc = "Copy path" })
