@@ -58,6 +58,8 @@ return {
         harpoon:list():select(4)
       end, { desc = "Select forth harpoon file" })
 
+      -- Update lualine config below if adding more keymaps
+
       -- Toggle previous & next buffers stored within Harpoon list
       vim.keymap.set("n", "<M-[>", function()
         harpoon:list():prev()
@@ -66,6 +68,135 @@ return {
       vim.keymap.set("n", "<M-]>", function()
         harpoon:list():next()
       end, { desc = "Go to next harpoon file" })
+    end,
+  },
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { "abeldekat/harpoonline", version = "*" },
+    config = function(_, opts)
+      local Harpoonline = require("harpoonline")
+      Harpoonline.setup({
+        ---@param data HarpoonlineData
+        ---@return string HarpoonLine *file1 file2 ...
+        custom_formatter = function(data)
+          local index = 0
+          return #data.items == 0 and ""
+            or table.concat(
+              vim.tbl_map(function(item)
+                index = index + 1
+                local filename = string.find(item.value, "/") == nil and item.value
+                  or item.value:match(".*" .. "/" .. "(.*)")
+                return data.active_idx == index and "*" .. filename or filename
+              end, data.items),
+              " "
+            )
+        end,
+
+        on_update = function()
+          require("lualine").refresh()
+        end,
+      })
+
+      ---@param inputstr string
+      ---@param del string
+      ---@return table<string>
+      local function split(inputstr, del)
+        if del == nil then
+          del = "%s"
+        end
+        local t = {}
+        for str in string.gmatch(inputstr, "([^" .. del .. "]+)") do
+          table.insert(t, str)
+        end
+        return t
+      end
+
+      ---@return boolean
+      local function isHarpoonActive()
+        return Harpoonline.format() ~= ""
+      end
+
+      ---@param index number
+      ---@return string | nil
+      local function getFile(index)
+        local files = split(Harpoonline.format(), " ")
+        local file = files[index]
+        -- Remove leading '*' character if present
+        return file and string.sub(file, 1, 1) == "*" and string.sub(file, 2) or file
+      end
+
+      ---@param index number
+      ---@return boolean
+      local isFileHarpooned = function(index)
+        local files = split(Harpoonline.format(), " ")
+        return files[index] ~= nil
+      end
+
+      ---@param index number
+      ---@return boolean
+      local function isFileCurrentBuffer(index)
+        local files = split(Harpoonline.format(), " ")
+        local file = files[index]
+        return file and string.sub(file, 1, 1) == "*"
+      end
+
+      ---@param index number
+      ---@param isActiveLine boolean
+      local function createLualine(index, isActiveLine)
+        if isActiveLine then
+          return {
+            function()
+              return isHarpoonActive() and isFileHarpooned(index) and isFileCurrentBuffer(index) and getFile(index)
+                or ""
+            end,
+            "filename",
+            color = { fg = "#a1cd5e" },
+          }
+        else
+          return {
+            function()
+              return isHarpoonActive() and isFileHarpooned(index) and not isFileCurrentBuffer(index) and getFile(index)
+                or ""
+            end,
+            "filename",
+          }
+        end
+      end
+
+      local lualines = {
+        {
+          function()
+            return isHarpoonActive() and "󰛢 [" or ""
+          end,
+          "filename",
+          color = { fg = "#a1cd5e" },
+        },
+        createLualine(1, true),
+        createLualine(1, false),
+        createLualine(2, true),
+        createLualine(2, false),
+        createLualine(3, true),
+        createLualine(3, false),
+        createLualine(4, true),
+        createLualine(4, false),
+        {
+          function()
+            return isHarpoonActive() and "]" or ""
+          end,
+          "filename",
+          color = { fg = "#a1cd5e" },
+        },
+      }
+
+      local function reverseInsert(tbl, tblToInsert)
+        for i = #tblToInsert, 1, -1 do
+          table.insert(tbl, 1, tblToInsert[i])
+        end
+      end
+
+      reverseInsert(opts.sections.lualine_c, lualines)
+
+      require("lualine").setup(opts)
     end,
   },
 }
