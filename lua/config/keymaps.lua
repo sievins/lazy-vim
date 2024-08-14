@@ -16,10 +16,12 @@ end
 normal_window_keymap("n", "<CR>", "mao<esc>0<S-d>`a<cmd>delmarks a<cr>", { desc = "Add new line below" })
 normal_window_keymap("n", "<S-CR>", "maO<esc>0<S-d>`a<cmd>delmarks a<cr>", { desc = "Add new line above" })
 
--- Keymap used by harpoon
+-- Keymap used by aerospace (window tiling manager)
 -- Save with no action
 -- vim.keymap.set("n", "<M-s>", "<cmd>noa w<cr>", { desc = "Save (no action)" })
 -- vim.keymap.set("v", "<M-s>", "<cmd>noa w<cr>", { desc = "Save (no action)" })
+vim.keymap.set("n", "<leader>fw", "<cmd>noa w<cr>", { desc = "Save (no action)" })
+vim.keymap.set("v", "<leader>fw", "<cmd>noa w<cr>", { desc = "Save (no action)" })
 
 -- Move lines (managed by <M-j/k>)
 vim.keymap.set("v", "<M-down>", ":m '>+1<CR>gv=gv")
@@ -50,7 +52,7 @@ vim.keymap.set("n", "<M-d>", [["_dd]], { desc = "Delete (black hole register)" }
 vim.keymap.set("x", "<M-d>", [["_d]], { desc = "Delete (black hole register)" })
 
 -- Markdown preview
-vim.keymap.set("n", "<M-m>", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Markdown preview" })
+vim.keymap.set("n", "<leader>fm", "<cmd>MarkdownPreviewToggle<cr>", { desc = "Markdown preview" })
 
 -- Open URL
 vim.keymap.set("n", "<M-o>", "<cmd>URLOpenUnderCursor<cr>", { desc = "Open URL" })

@@ -10,10 +10,12 @@ return {
         mappings = {
           -- Open file in split window
           i = {
-            ["<M-s>"] = "file_vsplit",
-            ["<M-S-s>"] = "file_split",
+            ["<M-S-\\>"] = "file_vsplit",
+            ["<M-->"] = "file_split",
           },
           n = {
+            ["<M-S-\\>"] = "file_vsplit",
+            ["<M-->"] = "file_split",
             ["s"] = "file_vsplit",
             ["<S-s>"] = "file_split",
           },

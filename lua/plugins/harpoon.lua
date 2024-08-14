@@ -42,30 +42,34 @@ return {
         toggle_telescope(harpoon:list())
       end, { desc = "Add file to harpoon" })
 
-      vim.keymap.set("n", "<M-h>", function()
-        harpoon:list():select(1)
-      end, { desc = "Select first harpoon file" })
-
-      vim.keymap.set("n", "<M-t>", function()
-        harpoon:list():select(2)
-      end, { desc = "Select second harpoon file" })
-
-      vim.keymap.set("n", "<M-s>", function()
-        harpoon:list():select(3)
-      end, { desc = "Select third harpoon file" })
-
-      vim.keymap.set("n", "<M-n>", function()
-        harpoon:list():select(4)
-      end, { desc = "Select forth harpoon file" })
+      -- Most of these shift keys are reserved and I've found that remembering
+      -- which file is under which key hard to remember. So I'll just use
+      -- <S-up> and <S-down> to switch between files.
+      --
+      -- vim.keymap.set("n", "<S-h>", function()
+      --   harpoon:list():select(1)
+      -- end, { desc = "Select first harpoon file" })
+      --
+      -- vim.keymap.set("n", "<S-t>", function()
+      --   harpoon:list():select(2)
+      -- end, { desc = "Select second harpoon file" })
+      --
+      -- vim.keymap.set("n", "<S-s>", function()
+      --   harpoon:list():select(3)
+      -- end, { desc = "Select third harpoon file" })
+      --
+      -- vim.keymap.set("n", "<S-n>", function()
+      --   harpoon:list():select(4)
+      -- end, { desc = "Select forth harpoon file" })
 
       -- Update lualine config below if adding more keymaps
 
       -- Toggle previous & next buffers stored within Harpoon list
-      vim.keymap.set("n", "<M-[>", function()
+      vim.keymap.set("n", "<S-down>", function()
         harpoon:list():prev()
       end, { desc = "Go to previous harpoon file" })
 
-      vim.keymap.set("n", "<M-]>", function()
+      vim.keymap.set("n", "<S-up>", function()
         harpoon:list():next()
       end, { desc = "Go to next harpoon file" })
     end,
