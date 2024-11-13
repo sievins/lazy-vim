@@ -34,6 +34,11 @@ return {
         harpoon:list():add()
       end, { desc = "Add file to harpoon" })
 
+      vim.keymap.set("n", "<leader>hA", function()
+        harpoon:list():clear()
+        harpoon:list():add()
+      end, { desc = "Clear list and add file to harpoon" })
+
       vim.keymap.set("n", "<leader>he", function()
         harpoon.ui:toggle_quick_menu(harpoon:list())
       end, { desc = "Toggle harpoon menu" })
@@ -41,6 +46,10 @@ return {
       vim.keymap.set("n", "<leader>ht", function()
         toggle_telescope(harpoon:list())
       end, { desc = "Add file to harpoon" })
+
+      vim.keymap.set("n", "<leader>hc", function()
+        harpoon:list():clear()
+      end, { desc = "Clear all files in the harpoon list" })
 
       -- Most of these shift keys are reserved and I've found that remembering
       -- which file is under which key hard to remember. So I'll just use
@@ -74,6 +83,7 @@ return {
       end, { desc = "Go to next harpoon file" })
     end,
   },
+  -- harpoonline has been archived - possible alternative: https://github.com/letieu/harpoon-lualine
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "abeldekat/harpoonline", version = "*" },
@@ -183,6 +193,10 @@ return {
         createLualine(3, false),
         createLualine(4, true),
         createLualine(4, false),
+        createLualine(5, true),
+        createLualine(5, false),
+        createLualine(6, true),
+        createLualine(6, false),
         {
           function()
             return isHarpoonActive() and "]" or ""
