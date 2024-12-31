@@ -2,7 +2,7 @@ return {
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "ibhagwan/fzf-lua" },
     config = function()
       local harpoon = require("harpoon")
 
@@ -10,24 +10,27 @@ return {
       harpoon:setup({})
       -- REQUIRED
 
-      -- Basic telescope configuration
-      local conf = require("telescope.config").values
-      local function toggle_telescope(harpoon_files)
+      local function toggle_fzf(harpoon_files)
         local file_paths = {}
+        -- Extract file paths from the Harpoon list
         for _, item in ipairs(harpoon_files.items) do
           table.insert(file_paths, item.value)
         end
 
-        require("telescope.pickers")
-          .new({}, {
-            prompt_title = "Harpoon",
-            finder = require("telescope.finders").new_table({
-              results = file_paths,
-            }),
-            previewer = conf.file_previewer({}),
-            sorter = conf.generic_sorter({}),
-          })
-          :find()
+        require("fzf-lua").fzf_exec(file_paths, {
+          prompt = "Harpoon> ",
+          actions = {
+            -- By default, press <CR> on a selection to open that file
+            ["default"] = function(selected)
+              if selected and #selected > 0 then
+                vim.cmd("edit " .. selected[1])
+              end
+            end,
+          },
+          -- Optional: If you’d like to preview the file, you can set `previewer`
+          -- and/or `fn_transform` to build your own display or preview logic.
+          previewer = "builtin",
+        })
       end
 
       vim.keymap.set("n", "<leader>ha", function()
@@ -44,8 +47,8 @@ return {
       end, { desc = "Toggle harpoon menu" })
 
       vim.keymap.set("n", "<leader>ht", function()
-        toggle_telescope(harpoon:list())
-      end, { desc = "Toggle harpoon telescope" })
+        toggle_fzf(harpoon:list())
+      end, { desc = "Toggle harpoon preview" })
 
       vim.keymap.set("n", "<leader>hc", function()
         harpoon:list():clear()
