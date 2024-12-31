@@ -27,7 +27,7 @@
     "yaml": [],
     "k8s.yaml": { "subdir": "learn-k8s" }
   },
-  "use_telescope": true,
+  "use_telescope": false,
   "filetypes": ["xml", "go", "lua", "js", "ts", "md", "py", "sh", "txt"],
   "localKeys": [
     {
