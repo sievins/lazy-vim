@@ -8,5 +8,11 @@ local rt = require("rust-tools")
 rt.setup()
 
 -- Snippets
-require("luasnip").filetype_extend("typescript", { "javascript" })
-require("luasnip").filetype_extend("typescriptreact", { "javascript" })
+vim.api.nvim_create_autocmd("TextChangedI", {
+  callback = function()
+    local blink_cmp = require("blink.cmp")
+    if blink_cmp.is_visible() then
+      blink_cmp.reload("snippets")
+    end
+  end,
+})
