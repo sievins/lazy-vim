@@ -31,5 +31,9 @@ return {
     opts = {
       keymap = { preset = "super-tab" },
     },
+    -- for avante https://github.com/yetone/avante.nvim/issues/959#issuecomment-2558295331
+    sources = {
+      compat = { "avante_commands", "avante_mentions", "avante_files" },
+    },
   },
 }
