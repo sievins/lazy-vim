@@ -22,6 +22,7 @@ return {
         -- Options override for custom providers
         provider_opts = {},
       },
+      hints = { enabled = false },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
