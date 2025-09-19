@@ -1,41 +1,51 @@
 return {
   {
     "yetone/avante.nvim",
-    event = "VeryLazy",
-    lazy = false,
-    version = false, -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
-    opts = {
-      -- add any opts here
-      -- for example
-      provider = "openai",
-      openai = {
-        endpoint = "https://api.openai.com/v1",
-        model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
-        timeout = 30000, -- timeout in milliseconds
-        temperature = 0, -- adjust if needed
-        max_tokens = 4096,
-      },
-      -- so can use blink for code complition https://github.com/yetone/avante.nvim/issues/959#issuecomment-2558295331
-      file_selector = {
-        --- @alias FileSelectorProvider "native" | "fzf" | "telescope" | string
-        provider = "fzf",
-        -- Options override for custom providers
-        provider_opts = {},
-      },
-      hints = { enabled = false },
-    },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = "make",
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    -- ⚠️ must add this setting! ! !
+    build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+      or "make",
+    event = "VeryLazy",
+    version = false, -- Never set this value to "*"! Never!
+    ---@module 'avante'
+    ---@type avante.Config
+    opts = {
+      instructions_file = "avante.md",
+      provider = "claude",
+      providers = {
+        claude = {
+          endpoint = "https://api.anthropic.com",
+          -- model = "claude-sonnet-4-20250514",
+          model = "claude-opus-4-1-20250805",
+          timeout = 30000, -- Timeout in milliseconds
+          extra_request_body = {
+            temperature = 0.75,
+            max_tokens = 20480,
+          },
+        },
+      },
+      input = {
+        provider = "snacks",
+        provider_opts = {
+          -- Additional snacks.input options
+          title = "Avante Input",
+          icon = "✽",
+        },
+      },
+      selection = {
+        hint_display = "none",
+      },
+    },
     dependencies = {
-      "stevearc/dressing.nvim",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       --- The below dependencies are optional,
-      "echasnovski/mini.pick", -- for file_selector provider mini.pick
+      "nvim-mini/mini.pick", -- for file_selector provider mini.pick
       "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
       "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
       "ibhagwan/fzf-lua", -- for file_selector provider fzf
+      "stevearc/dressing.nvim", -- for input provider dressing
+      "folke/snacks.nvim", -- for input provider snacks
       "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
       "zbirenbaum/copilot.lua", -- for providers='copilot'
       {
