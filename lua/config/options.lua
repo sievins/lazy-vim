@@ -3,3 +3,9 @@
 -- Add any additional options here
 
 -- vim.opt.colorcolumn = "120"
+
+vim.g.root_spec = {
+  { ".git" }, -- highest priority
+  "lsp",
+  "cwd",
+}
