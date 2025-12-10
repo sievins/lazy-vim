@@ -44,14 +44,8 @@ vim.api.nvim_create_autocmd("TextChangedI", {
 
 -- Add imports on save syncronously
 
-local util = require("lazyvim.util")
-
-util.lsp.on_attach(function(client, bufnr)
-  if not client.server_capabilities.codeActionProvider then
-    return
-  end
-
-  -- single group (won’t be re‐cleared on every attach)
+Snacks.util.lsp.on({ method = "textDocument/codeAction" }, function(bufnr)
+  -- single group (won't be re‐cleared on every attach)
   local group = vim.api.nvim_create_augroup("ts_imports_on_save", { clear = false })
 
   -- helper: sync‐request + apply a single code-action kind
@@ -59,15 +53,16 @@ util.lsp.on_attach(function(client, bufnr)
     local params = vim.lsp.util.make_range_params()
     params.context = {
       only = { kind },
-      -- diagnostics = vim.diagnostic.get(bufnr), -- include all current diagnostics!
-      diagnostics = {}, -- imports actions don’t need diagnostics
+      diagnostics = {}, -- imports actions don't need diagnostics
     }
     -- sync request (blocks up to 1s)
     local results = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 1000)
     for _, res in pairs(results or {}) do
       for _, action in ipairs(res.result or {}) do
         if action.edit then
-          vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
+          local client = vim.lsp.get_client_by_id(res.client_id)
+          local offset_encoding = client and client.offset_encoding or "utf-16"
+          vim.lsp.util.apply_workspace_edit(action.edit, offset_encoding)
         elseif action.command then
           vim.lsp.buf.execute_command(action.command)
         end
@@ -78,11 +73,10 @@ util.lsp.on_attach(function(client, bufnr)
   vim.api.nvim_create_autocmd("BufWritePre", {
     group = group,
     buffer = bufnr,
-    -- no pattern needed, it’s buffer-local already
     callback = function()
-      -- 1) prune unused imports - doesn't work: removes other imports and formats wrongly
+      -- prune unused imports - doesn't work: removes other imports and formats wrongly
       -- apply_ts_action("source.removeUnused.ts")
-      -- 2) add any missing imports
+      -- add any missing imports
       apply_ts_action("source.addMissingImports.ts")
     end,
   })
