@@ -59,6 +59,12 @@ vim.api.nvim_create_autocmd("TextChangedI", {
 -- - We use synchronous requests (buf_request_sync) so edits apply before the file saves
 
 Snacks.util.lsp.on({ method = "textDocument/codeAction" }, function(bufnr)
+  -- Only run for TypeScript/JavaScript files
+  local ft = vim.bo[bufnr].filetype
+  if ft ~= "typescript" and ft ~= "typescriptreact" and ft ~= "javascript" and ft ~= "javascriptreact" then
+    return
+  end
+
   -- Only set up autocmd once per buffer, even if multiple LSP clients attach
   if vim.b[bufnr].ts_imports_on_save then
     return
@@ -71,6 +77,12 @@ Snacks.util.lsp.on({ method = "textDocument/codeAction" }, function(bufnr)
     group = group,
     buffer = bufnr,
     callback = function()
+      -- Skip if no diagnostics (nothing to fix = no need for slow LSP requests)
+      local diagnostics = vim.diagnostic.get(bufnr)
+      if #diagnostics == 0 then
+        return
+      end
+
       --- Request a specific code action from the LSP and apply it synchronously
       --- @param kind string The code action kind (e.g., "source.addMissingImports.ts")
       local function apply_ts_action(kind)
