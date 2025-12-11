@@ -14,6 +14,7 @@ return {
     },
   },
   -- Disable LSP formatting for TS/JS (eslint and vtsls are slow)
+  -- Also disable inlay hints
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -33,6 +34,9 @@ return {
             format = false,
           },
         },
+      },
+      inlay_hints = {
+        enabled = false,
       },
     },
   },
