@@ -3,44 +3,24 @@
 -- Add any additional autocmds here
 
 -- Rust
-local rt = require("rust-tools")
-
-rt.setup()
-
--- Snippets
-vim.api.nvim_create_autocmd("TextChangedI", {
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "rust",
+  once = true,
   callback = function()
-    local blink_cmp = require("blink.cmp")
-    if blink_cmp.is_visible() then
-      blink_cmp.reload("snippets")
-    end
+    require("rust-tools").setup()
   end,
 })
 
--- Add imports before save and save again because imports updated asyncronously
-
--- local util = require("lazyvim.util")
---
--- util.lsp.on_attach(function(client, bufnr)
---   if client.server_capabilities.codeActionProvider then
---     vim.api.nvim_create_autocmd({ "BufWritePre" }, {
---       group = vim.api.nvim_create_augroup("ts_imports_code_action_on_save", { clear = true }),
---       pattern = { "*.tsx,*.ts" },
---       callback = function()
---         LazyVim.lsp.action["source.addMissingImports.ts"]()
---         -- LazyVim.lsp.action["source.removeUnused.ts"]() -- prune unused imports - doesn't work: removes other imports and formats wrongly
---
---         vim.api.nvim_create_autocmd({ "TextChanged" }, {
---           group = vim.api.nvim_create_augroup("ts_imports_code_action_on_save_completed", {}),
---           callback = function()
---             vim.cmd.write()
---           end,
---           once = true,
---         })
---       end,
---     })
---   end
--- end)
+-- Snippets
+-- Commenting out for better performance
+-- vim.api.nvim_create_autocmd("TextChangedI", {
+--   callback = function()
+--     local blink_cmp = require("blink.cmp")
+--     if blink_cmp.is_visible() then
+--       blink_cmp.reload("snippets")
+--     end
+--   end,
+-- })
 
 -- TypeScript: Auto-add missing imports and remove unused imports on save
 --
@@ -98,13 +78,13 @@ Snacks.util.lsp.on({ method = "textDocument/codeAction" }, function(bufnr)
         }
 
         -- Send synchronous request to all LSP clients (waits up to 1 second)
-        local results = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 1000)
+        local results = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 500)
 
         for client_id, res in pairs(results or {}) do
           for _, action in ipairs(res.result or {}) do
             -- Handle "lazy" actions that need resolving to get the actual edit
             if action.data and not action.edit then
-              local resolved = vim.lsp.buf_request_sync(bufnr, "codeAction/resolve", action, 1000)
+              local resolved = vim.lsp.buf_request_sync(bufnr, "codeAction/resolve", action, 500)
               if resolved and resolved[client_id] and resolved[client_id].result then
                 action = resolved[client_id].result
               end
